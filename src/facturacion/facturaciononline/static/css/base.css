@@ -5,9 +5,10 @@
 }
 
 div#header h1{
-  padding-top: 31px;
+  padding-top: 20px;
   text-align: center;
   color: #ECF9F3;
+  font-size: 48px;
 }
 
 div#header{
@@ -18,11 +19,30 @@ div#header{
 
 div.wrapper{
   width: 1000px;
-  padding-top: 100px;
+  padding-top: 20px;
   position: relative;
   display: block;
   min-height: 300px;
   float: none;
   margin: 0 auto;
+}
 
+p {
+  font-size: 20px;
+}
+
+label {
+  font-size: 35px;
+  color: #47799F;
+}
+
+select {
+  overflow: hidden;
+  background: url('../images/flecha.svg') no-repeat;
+}
+
+input, select {
+  height: 47px;
+  border: 1px solid #8F8F8F;
+  border-radius: 6px;
 }

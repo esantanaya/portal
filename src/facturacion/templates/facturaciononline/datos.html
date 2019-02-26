@@ -1,0 +1,14 @@
+{% extends "facturaciononline/base.html" %}
+
+{% block content %}
+<form action="/facturaciononline/timbre/" method="post">
+  {% csrf_token %}
+  {% for field in form %}
+  <div class="fieldWrapper">
+    {{ field.errors }}
+    {{ field }}
+  </div>
+  {% endfor %}
+  <input type="submit" value="Enviar">
+</form>
+{% endblock %}
