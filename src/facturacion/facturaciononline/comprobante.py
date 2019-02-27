@@ -7,6 +7,7 @@ import configparser
 from lxml import etree as et
 from .chilkat import CkPrivateKey, CkRsa
 from django.conf import settings
+import requests
 
 from .legacy_db import get_emisor
 
@@ -234,6 +235,7 @@ class Comprobante:
     def crea_xml(self):
         nv = Utilidades.no_vacio
         sd = Utilidades.seis_decimales
+        dd = Utilidades.dos_decimales
         #TODO Esto debe de ir en BD
         self._emisor.get_emisor()
         self._certificado = Certificado(self._emisor.nom_archivo_certificado,
@@ -255,9 +257,9 @@ class Comprobante:
                 'Moneda': self._moneda,
                 'NoCertificado': self._certificado.numero,
                 'Serie': self._serie,
-                'SubTotal': str(self._subtotal),
+                'SubTotal': dd(self._subtotal),
                 'TipoDeComprobante': self.tipo_comprobante,
-                'Total': str(self._total),
+                'Total': dd(self._total),
                 'Version': self._version,
             })
         #Emisor
@@ -294,12 +296,12 @@ class Comprobante:
                 f'{{{self._xmlns_cfdi}}}Concepto',
                 nsmap=self._namespaces,
                 attrib={
-                    'Cantidad': str(concepto.cantidad),
+                    'Cantidad': dd(concepto.cantidad),
                     'ClaveProdServ': concepto.clave_prod_serv,
                     'ClaveUnidad': concepto.clave_unidad,
                     'Descripcion': nv(concepto.descripcion),
-                    'Importe': str(concepto.importe),
-                    'ValorUnitario': str(concepto.valor_unitario),
+                    'Importe': dd(concepto.importe),
+                    'ValorUnitario': dd(concepto.valor_unitario),
                 }
             )
             el_impuestos = et.SubElement(
@@ -317,8 +319,8 @@ class Comprobante:
                 f'{{{self._xmlns_cfdi}}}Traslado',
                 nsmap=self._namespaces,
                 attrib={
-                    'Base': str(concepto.base_impuesto),
-                    'Importe': str(concepto.importe_impuesto),
+                    'Base': dd(concepto.base_impuesto),
+                    'Importe': dd(concepto.importe_impuesto),
                     'Impuesto': concepto.tipo_impuesto,
                     'TasaOCuota': sd(concepto.tasa_cuota),
                     'TipoFactor': concepto.tipo_factor.capitalize(),
@@ -329,7 +331,7 @@ class Comprobante:
             f'{{{self._xmlns_cfdi}}}Impuestos',
             nsmap=self._namespaces,
             attrib={
-                'TotalImpuestosTrasladados': str(self._impuesto.total),
+                'TotalImpuestosTrasladados': dd(self._impuesto.total),
             }
         )
         el_traslados = et.SubElement(
@@ -342,7 +344,7 @@ class Comprobante:
             f'{{{self._xmlns_cfdi}}}Traslado',
             nsmap=self._namespaces,
             attrib={
-                'Importe': str(self._impuesto.total),
+                'Importe': dd(self._impuesto.total),
                 'TipoFactor': self._impuesto.tipo_factor.capitalize(),
                 'TasaOCuota': sd(self._impuesto.tasa_cuota),
                 'Impuesto': self._impuesto.impuesto,
@@ -384,6 +386,36 @@ class Comprobante:
 
         xml.attrib['Sello'] = sello
         return et.ElementTree(xml)
+
+    def timbra_xml(self):
+        breakpoint()
+        xml = self.crea_xml()
+        conf = Configuracion()
+        data = {'email': conf.user, 'password': conf.pswd}
+        auth = requests.post(conf.url_auth, json=data)
+        if auth.status_code != 200:
+            raise CFDIError('No se pudo obtener el token de autenticacion'
+                            f' {auth.status_code}')
+        else:
+            token = auth.json().get('token')
+            headers = {
+                'Content-Type': 'application/json',
+                'Authorization': f'token {token}'
+            }
+            with open(self._nombre_archivo, 'rb') as ar:
+                xml = ar.read()
+            xml = base64.b64encode(xml)
+            xml = xml.decode('utf-8')
+            data = {
+                'xml': xml
+            }
+            timbre = requests.post(conf.url_timbre, headers=headers, json=data)
+            if timbre.status_code != 200:
+                raise CFDIError('No se pudo timbrar el CFDI '
+                                f'{timbre.status_code} '
+                                f'{timbre.json()["message"]}')
+            else:
+                print('Ok')
 
 
 class Emisor:
@@ -1195,10 +1227,19 @@ class Utilidades:
             return 'NA'
         else:
             return texto
+
     @staticmethod
     def seis_decimales(valor):
         try:
             t = f'{float(valor):.6f}'
+        except ValueError:
+            t = '0.0'
+        return t
+
+    @staticmethod
+    def dos_decimales(valor):
+        try:
+            t = f'{float(valor):.2f}'
         except ValueError:
             t = '0.0'
         return t
@@ -1212,6 +1253,11 @@ class Configuracion:
         self.ruta_cert = config['Rutas'].get('certificado')
         self.ruta_llave = config['Rutas'].get('llave')
         self.ruta_xslt = config['Rutas'].get('xslt')
+        self.user = config['IENTC'].get('user')
+        self.pswd = config['IENTC'].get('pswd')
+        self.url_auth = config['IENTC'].get('url_auth')
+        self.url_timbre = config['IENTC'].get('url_timbre')
+        self.url_cuenta = config['IENTC'].get('url_cuenta')
 
     def ruta(self, ruta):
         if ruta == 'certificado':

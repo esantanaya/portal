@@ -93,11 +93,10 @@ def timbre(request):
             datos_con = get_conceptos(agencia, id_comp)
             conceptos = []
             for reg in datos_con:
-                importe = reg[0] * reg[6]
                 tasa = 0.160000
                 concepto = Concepto(reg[0], reg[3], reg[1], reg[5],
-                                    importe , reg[6], '002', tasa,
-                                    float(importe) * tasa, importe, 'Tasa')
+                                    reg[7] , reg[6], '002', tasa,
+                                    reg[8], reg[7], 'Tasa')
                 conceptos.append(concepto)
             comprobante.conceptos = conceptos
-            arbol = comprobante.crea_xml()
+            token = comprobante.timbra_xml()

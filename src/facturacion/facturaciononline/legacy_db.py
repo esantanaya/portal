@@ -98,9 +98,9 @@ def get_conceptos(idEmisor, idCertificado):
                                   passwd='srvsql0981',
                                   database='certificadosfiscalesdigitales')
     query = ("select cantidad, clave_unidad, unidad, clave_prod_serv,"
-             " numeroIdentificacion, descripcion, valorUnitario from"
-             f" conceptoscertificados where idEmisor = '{idEmisor}' "
-             f"and idCertificado = '{idCertificado}'")
+             " numeroIdentificacion, descripcion, valorUnitario, importe, "
+             "impuesto from conceptoscertificados where idEmisor = "
+             f"'{idEmisor}' and idCertificado = '{idCertificado}'")
     cur = con.cursor()
     cur.execute(query)
     resultado = cur.fetchall()
