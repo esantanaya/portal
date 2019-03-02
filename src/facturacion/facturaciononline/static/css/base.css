@@ -41,8 +41,87 @@ select {
   background: url('../images/flecha.svg') no-repeat;
 }
 
-input, select {
+input[type=text], input[type=number], select {
   height: 47px;
   border: 1px solid #8F8F8F;
   border-radius: 6px;
+  font-size: 30px;
+  padding: 5px 10px;
+}
+
+input[type=submit]{
+  text-decoration: none;
+  background-color: #45A97F;
+  color: #ECF9F3;
+  width: 170px;
+  height: 51px;
+  border: none;
+  font-size: 36px;
+  margin-top: 69px;
+}
+
+a{
+  text-decoration: none;
+  text-align: center;
+}
+
+a.titulo{
+  color: #ECF9F3;
+}
+
+a.descarga{
+  width: 100px;
+  height: 100px;
+  float: left;
+  padding-top: 100px;
+}
+
+a#pdf{
+  background: url('../images/pdf.svg') no-repeat;
+}
+
+a#zip{
+  background: url('../images/zip.svg') no-repeat;
+}
+
+form{
+  text-align: center;
+  padding: 50px 0;
+}
+
+div.row{
+  float: left;
+  display: block;
+  width: 100%;
+  margin: 18.5px 0;
+}
+
+div.leftForm, div.rightForm{
+  width: 50%;
+  margin: 0;
+  float: left;
+}
+
+div.leftForm{
+  text-align: right;
+}
+
+div.leftForm > label{
+  margin-right: 15px;
+}
+
+div.rightForm{
+  text-align: left;
+}
+
+ul.errorlist > li {
+    color: #DC5A81;
+}
+
+#id_concesionaria{
+  width: 350px;
+}
+
+div.rightForm > input{
+  width: 259px;
 }

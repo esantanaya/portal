@@ -1,7 +1,7 @@
 {% extends "facturaciononline/base.html" %}
 
 {% block content %}
-<form action="/facturaciononline/timbre/" method="post">
+<form action="/facturaciononline/timbre/" method="post" id="form_datos">
   {% csrf_token %}
   {% for field in form %}
   <div class="fieldWrapper">

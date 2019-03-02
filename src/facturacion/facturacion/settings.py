@@ -121,3 +121,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Configuracion para correo
+
+EMAIL_HOST = 's16038.svrdatacenter.com'
+
+EMAIL_HOST_PASSWORD = 'd#M~mzC5n++G'
+
+EMAIL_HOST_USER = 'facturas@prolecsa.com.mx'
+
+EMAIL_PORT = 465
+
+EMAIL_USE_TLS = True
+
+EMAIL_USE_SSL = True

@@ -1,8 +1,10 @@
 import base64
 import csv
-from os import sep
+import os
 import re
 import configparser
+import logging
+from datetime import datetime
 
 from lxml import etree as et
 from .chilkat import CkPrivateKey, CkRsa
@@ -10,6 +12,16 @@ from django.conf import settings
 import requests
 
 from .legacy_db import get_emisor
+
+
+logging.basicConfig(filename=os.path.join(
+                        'facturaciononline',
+                        'static',
+                        'logs',
+                        'comprobante.log',
+                    ),
+                    format='%(asctime)s - %(message)s',
+                    datefmt='%d/%m/%Y %H:%M:%S')
 
 
 class Comprobante:
@@ -351,14 +363,11 @@ class Comprobante:
             }
         )
         arbol = self.sella_xml(elemento)
-        #TODO Esto debe guardar en una ruta especial
-        arbol.write(self._nombre_archivo, encoding='utf-8', pretty_print=True,
-                    standalone=True)
         return arbol
 
     def sella_xml(self, xml):
         conf = Configuracion()
-        ruta_llave = sep.join([conf.ruta('llave'),
+        ruta_llave = os.sep.join([conf.ruta('llave'),
                                self._emisor.nom_archivo_llave])
         pswd = self._emisor.pswd_archivo_llave
         p_key = CkPrivateKey()
@@ -367,7 +376,7 @@ class Comprobante:
             raise CFDIError('No se pudo cargar la llave')
         key_xml = p_key.getXml()
 
-        ruta_xslt = sep.join([conf.ruta('xslt'), 'cadenaoriginal_3_3.xslt'])
+        ruta_xslt = os.sep.join([conf.ruta('xslt'), 'cadenaoriginal_3_3.xslt'])
         xslt_root = et.parse(ruta_xslt)
         xslt = et.XSLT(xslt_root)
         trans = xslt(xml)
@@ -388,8 +397,6 @@ class Comprobante:
         return et.ElementTree(xml)
 
     def timbra_xml(self):
-        breakpoint()
-        xml = self.crea_xml()
         conf = Configuracion()
         data = {'email': conf.user, 'password': conf.pswd}
         auth = requests.post(conf.url_auth, json=data)
@@ -402,8 +409,8 @@ class Comprobante:
                 'Content-Type': 'application/json',
                 'Authorization': f'token {token}'
             }
-            with open(self._nombre_archivo, 'rb') as ar:
-                xml = ar.read()
+            xml = self.crea_xml()
+            xml = et.tostring(xml)
             xml = base64.b64encode(xml)
             xml = xml.decode('utf-8')
             data = {
@@ -412,10 +419,48 @@ class Comprobante:
             timbre = requests.post(conf.url_timbre, headers=headers, json=data)
             if timbre.status_code != 200:
                 raise CFDIError('No se pudo timbrar el CFDI '
-                                f'{timbre.status_code} '
-                                f'{timbre.json()["message"]}')
+                                f'Códgio de error: {timbre.status_code} '
+                                f'Mensaje: {timbre.json()["message"]}')
             else:
-                print('Ok')
+                cad_xml = timbre.json().get('data').get('cfdi').encode()
+                elemento_xml = et.fromstring(cad_xml)
+                archivo_xml = et.ElementTree(elemento_xml)
+                mes_anio = datetime.now().strftime('%m%Y')
+                try:
+                    archivo_xml.write(
+                        os.path.join(
+                            'facturaciononline',
+                            'static',
+                            'facturas',
+                            mes_anio,
+                            self._nombre_archivo
+                        ),
+                        encoding='utf-8',
+                        pretty_print=True,
+                        standalone=True
+                    )
+                except FileNotFoundError:
+                    try:
+                        os.mkdir(os.path.join(
+                            'facturaciononline',
+                            'static',
+                            'facturas',
+                            mes_anio,
+                        ))
+                        archivo_xml.write(
+                            os.path.join(
+                                'facturaciononline',
+                                'static',
+                                'facturas',
+                                mes_anio,
+                                self._nombre_archivo
+                            ),
+                            encoding='utf-8',
+                            pretty_print=True,
+                            standalone=True
+                        )
+                    except Exception as e:
+                        logging.error(e)
 
 
 class Emisor:
@@ -1213,7 +1258,7 @@ class Certificado:
         self._numero = numero
 
     def __str__(self):
-        with open(f"{sep.join(self._ruta.split('|'))}{sep}{self._archivo}",
+        with open(f"{os.sep.join(self._ruta.split('|'))}{os.sep}{self._archivo}",
                   'rb') as ar:
             te = ar.read()
         by = base64.b64encode(te)
@@ -1261,11 +1306,11 @@ class Configuracion:
 
     def ruta(self, ruta):
         if ruta == 'certificado':
-            return sep.join([self.ruta_general, self.ruta_cert])
+            return os.sep.join([self.ruta_general, self.ruta_cert])
         elif ruta == 'llave':
-            return sep.join([self.ruta_general, self.ruta_llave])
+            return os.sep.join([self.ruta_general, self.ruta_llave])
         elif ruta == 'xslt':
-            return sep.join([self.ruta_general, self.ruta_xslt])
+            return os.sep.join([self.ruta_general, self.ruta_xslt])
 
 
 class CFDIError(Exception):

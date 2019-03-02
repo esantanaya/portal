@@ -1,4 +1,7 @@
 diseño/
 db.sqlite3
 *.xml
+*.pdf
+*.log
+*.f33
 *~

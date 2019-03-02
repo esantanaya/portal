@@ -1,0 +1,12 @@
+{% extends "facturaciononline/base.html" %}
+{% load static %}
+
+{% block content %}
+<div id="archivos">
+  <a href="{% static "facturas/" %}{{mes_anio}}/{{idCertificado}}.xml" download id="pdf" class="descarga">Descarga</a>
+  <a href="" id="zip" class="descarga">Descarga</a>
+</div>
+<div id="correo">
+
+</div>
+{% endblock %}

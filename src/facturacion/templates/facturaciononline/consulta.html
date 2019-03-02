@@ -8,12 +8,34 @@
 
   <form action="consulta/" method="post">
     {% csrf_token %}
-    {% for field in form %}
-    <div class="fieldWrapper">
-      {{ field.errors }}
-      {{ field.label_tag }} {{ field }}
-    </div>
-    {% endfor %}
+    {{ form.non_field_errors }}
+      <div class="row">
+        <div class="leftForm">
+          <label for="{{ form.concecionaria.id_for_label }}">Concecionario</label>
+        </div>
+        <div class="rightForm">
+          {{ form.concesionaria.errors }}
+          {{ form.concesionaria }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="leftForm">
+          <label for="{{ form.factura.id_for_label }}">Factura</label>
+        </div>
+        <div class="rightForm">
+          {{ form.factura.errors }}
+          {{ form.factura }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="leftForm">
+          <label for="{{ form.total.id_for_label }}">Total</label>
+        </div>
+        <div class="rightForm">
+          {{ form.total.errors }}
+          {{ form.total }}
+        </div>
+      </div>
     <input type="submit" value="Consulta">
   </form>
   <p>Recuerda que tienes 30 días naturales a partir de tu servicio para facturar y que la fecha de la factura es del día que la generas</p>

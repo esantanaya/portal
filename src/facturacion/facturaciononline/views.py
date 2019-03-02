@@ -3,7 +3,8 @@ from django.http import HttpResponseRedirect
 
 from .forms import ConsultaForm, DatosForm
 from .legacy_db import (consulta_valides, datos_cliente, get_cab_comp,
-                        get_impuestos, get_lugar_expedicion, get_conceptos)
+                        get_impuestos, get_lugar_expedicion, get_conceptos,
+                        get_fecha_comp)
 from .comprobante import Receptor, Emisor, Comprobante, Impuestos, Concepto
 
 
@@ -28,8 +29,16 @@ def consulta(request):
             resp = consulta_valides(agencia, factura, total)
             if not resp:
                 return HttpResponseRedirect('/facturaciononline/')
-            elif type(resp) == 'Tuple':
-                return HttpResponseRedirect('/')
+            elif isinstance(resp, tuple):
+                fecha = get_fecha_comp(agencia, id_comp)
+                context = {
+                    'titulo': 'Descarga de Información',
+                    'agencia': agencia,
+                    'idCertificado': resp[1],
+                    'mes_anio': fecha.strftime('%m%Y'),
+                }
+                return render(request, 'facturaciononline/descarga.html',
+                              context)
             else:
                 res_dat_cl = datos_cliente(agencia, resp)
                 rfc, nombre, calle, cp, colonia, mun, estado = res_dat_cl
@@ -91,6 +100,7 @@ def timbre(request):
                 impuesto,
             )
             datos_con = get_conceptos(agencia, id_comp)
+            fecha = get_fecha_comp(agencia, id_comp)
             conceptos = []
             for reg in datos_con:
                 tasa = 0.160000
@@ -99,4 +109,11 @@ def timbre(request):
                                     reg[8], reg[7], 'Tasa')
                 conceptos.append(concepto)
             comprobante.conceptos = conceptos
-            token = comprobante.timbra_xml()
+            comprobante.timbra_xml()
+            context = {
+                'titulo': 'Descarga de Información',
+                'agencia': agencia,
+                'idCertificado': id_comp,
+                'mes_anio': fecha.strftime('%m%Y'),
+            }
+            return render(request, 'facturaciononline/descarga.html', context)
