@@ -12,8 +12,12 @@ conf = {
 def get_fecha_comp(agencia, factura):
     con = mysql.connector.connect(**conf)
     cur = con.cursor()
-    query = (f"select fecha from certificados where idEmisor = '{agencia}' and "
-             f"idCertificado = '{factura}'")
+    if len(factura) > 7:
+        query = (f"select fecha from certificados where idEmisor = '{agencia}' and "
+                 f"idCertificado = '{factura}'")
+    else:
+        query = (f"select fecha from certificados where idEmisor = '{agencia}' and "
+                 f"idCertificado = '02-UD10001-{factura}'")
     cur.execute(query)
     resultado = cur.fetchone()
     cur.close()
@@ -36,7 +40,6 @@ def consulta_valides(agencia, factura, total):
     try:
         t_min = total - 1
         t_max = total + 1
-        factura = f'{factura[0:2]}{int(factura[2:]):05d}'.upper()
         con = mysql.connector.connect(**conf)
     except Exception:
         pass
@@ -134,3 +137,27 @@ def get_conceptos(idEmisor, idCertificado):
     cur.execute(query)
     resultado = cur.fetchall()
     return resultado
+
+
+def guarda_timbre(idEmisor, idCertificado, uuid, fecha_timbrado, sello_cfd,
+                   num_cert_sat, sello_sat, cadena_xml_original, cadena_xml,
+                   cadena_original, serie, num_cert_emi):
+    try:
+        args_timbre = (idEmisor, idCertificado, '1.1', uuid, fecha_timbrado,
+                       sello_cfd, num_cert_sat, sello_sat, cadena_xml_original,
+                       cadena_original)
+        args_xml = (idEmisor, idCertificado, '3.3', serie, sello_cfd[:255], 0, 0,
+                    num_cert_emi, cadena_original, cadena_xml)
+        con = mysql.connector.connect(**conf)
+        cur = con.cursor()
+        res_timbre = cur.callproc('spGuardaTimbreCertificado', args_timbre)
+        res_xml = cur.callproc('spGuardaXmlCertificado', args_xml)
+        return True
+    except Exception:
+        return False
+    finally:
+        cur.close()
+        con.close()
+
+
+#def get_f33s(idEmisor, idCertificado):

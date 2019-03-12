@@ -8,6 +8,10 @@ from .legacy_db import (consulta_valides, datos_cliente, get_cab_comp,
 from .comprobante import Receptor, Emisor, Comprobante, Impuestos, Concepto
 
 
+def corrige_factura(factura):
+    return f'{factura[0:2]}{int(factura[2:]):05d}'.upper()
+
+
 def consulta_carga(request):
     titulo = 'Facturación en Línea'
     form = ConsultaForm()
@@ -19,18 +23,19 @@ def consulta_carga(request):
         context['error'] = 'No fue posible localizar la factura'
     return render(request, 'facturaciononline/consulta.html', context)
 
+
 def consulta(request):
     if request.method == 'POST':
         form = ConsultaForm(request.POST)
         if form.is_valid():
             agencia = form.cleaned_data['concesionaria']
-            factura = form.cleaned_data['factura']
+            factura = corrige_factura(form.cleaned_data['factura'])
             total = form.cleaned_data['total']
             resp = consulta_valides(agencia, factura, total)
             if not resp:
                 return HttpResponseRedirect('/facturaciononline/')
             elif isinstance(resp, tuple):
-                fecha = get_fecha_comp(agencia, id_comp)
+                fecha = get_fecha_comp(agencia, factura)
                 context = {
                     'titulo': 'Descarga de Información',
                     'agencia': agencia,
@@ -60,6 +65,7 @@ def consulta(request):
                     'form': d_form,
                 }
                 return render(request, 'facturaciononline/datos.html', context)
+
 
 def timbre(request):
     if request.method == 'POST':

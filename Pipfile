@@ -8,6 +8,7 @@ django = "*"
 mysql-connector = "*"
 lxml = "*"
 requests = "*"
+reportlab = "*"
 
 [dev-packages]
 flake8 = "*"

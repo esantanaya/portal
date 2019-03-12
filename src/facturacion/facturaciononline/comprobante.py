@@ -11,7 +11,8 @@ from .chilkat import CkPrivateKey, CkRsa
 from django.conf import settings
 import requests
 
-from .legacy_db import get_emisor
+from .legacy_db import get_emisor, guarda_timbre
+from .pdfs import construye_comprobante
 
 
 logging.basicConfig(filename=os.path.join(
@@ -425,8 +426,21 @@ class Comprobante:
                 cad_xml = timbre.json().get('data').get('cfdi').encode()
                 elemento_xml = et.fromstring(cad_xml)
                 archivo_xml = et.ElementTree(elemento_xml)
+                breakpoint()
+                compdf = construye_comprobante(archivo_xml,
+                                               self._nombre_archivo)
                 mes_anio = datetime.now().strftime('%m%Y')
                 try:
+                    guarda_timbre(self.emisor.rfc, self.nombre_archivo[:-4],
+                                  timbre.json()['data']['uuid'],
+                                  timbre.json()['data']['fechaTimbrado'],
+                                  timbre.json()['data']['selloCFDI'],
+                                  timbre.json()['data']['noCertificadoSAT'],
+                                  timbre.json()['data']['selloSAT'],
+                                  'timbre', timbre.json()['data']['cfdi'],
+                                  timbre.json()['data']['cadenaOriginalSAT'],
+                                  self.serie,
+                                  timbre.json()['data']['noCertificadoCFDI'])
                     archivo_xml.write(
                         os.path.join(
                             'facturaciononline',
@@ -1293,7 +1307,10 @@ class Utilidades:
 class Configuracion:
     def __init__(self):
         config = configparser.ConfigParser()
-        config.read(r'facturaciononline\conf.ini', encoding='utf-8')
+        config.read(
+            os.path.join('facturaciononline', 'static', 'recursos', 'conf.ini'),
+            encoding='utf-8'
+        )
         self.ruta_general = config['Rutas'].get('general')
         self.ruta_cert = config['Rutas'].get('certificado')
         self.ruta_llave = config['Rutas'].get('llave')

@@ -27,7 +27,7 @@ div.wrapper{
   margin: 0 auto;
 }
 
-p {
+p{
   font-size: 20px;
 }
 
@@ -124,4 +124,12 @@ ul.errorlist > li {
 
 div.rightForm > input{
   width: 259px;
+}
+
+div#archivos{
+  padding-top: 80px;
+  width: 100%;
+  float: left;
+  height: auto;
+  text-align: center;
 }
