@@ -7,7 +7,7 @@ import logging
 from datetime import datetime
 
 from lxml import etree as et
-from .chilkat import CkPrivateKey, CkRsa
+from chilkat import CkPrivateKey, CkRsa
 from django.conf import settings
 import requests
 

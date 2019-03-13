@@ -26,7 +26,11 @@ SECRET_KEY = '6d=479m2jhkhvt+(!67cst4+eb%#*of75k44wyc*1fi-y9egl5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['facturacion.prolecsa.mx']
+ALLOWED_HOSTS = [
+    'facturacion.prolecsa.mx', 
+    'factura.prolecsa.mx', 
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -122,6 +126,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 # Configuracion para correo
 
 EMAIL_HOST = 's16038.svrdatacenter.com'
@@ -133,5 +139,3 @@ EMAIL_HOST_USER = 'facturas@prolecsa.com.mx'
 EMAIL_PORT = 465
 
 EMAIL_USE_TLS = True
-
-EMAIL_USE_SSL = True
