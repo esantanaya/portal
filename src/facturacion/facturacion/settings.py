@@ -24,9 +24,9 @@ SECRET_KEY = '6d=479m2jhkhvt+(!67cst4+eb%#*of75k44wyc*1fi-y9egl5'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['facturacion.prolecsa.mx']
 
 
 # Application definition
