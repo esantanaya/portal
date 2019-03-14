@@ -253,7 +253,7 @@ class Comprobante:
         self._emisor.get_emisor()
         self._certificado = Certificado(self._emisor.nom_archivo_certificado,
                                         self._emisor.nro_certificado,
-                                        r'\\192.168.24.10|e$|cfd|Certificados')
+                                        '/home|qrotest|portal|Utilidades|Certificados')
         self._lugar_expedicion = self._emisor.codigo_postal
         attr_schema = et.QName(self._xmlns_xsi, 'schemaLocation')
         elemento = et.Element(
@@ -426,7 +426,6 @@ class Comprobante:
                 cad_xml = timbre.json().get('data').get('cfdi').encode()
                 elemento_xml = et.fromstring(cad_xml)
                 archivo_xml = et.ElementTree(elemento_xml)
-                breakpoint()
                 compdf = construye_comprobante(archivo_xml,
                                                self._nombre_archivo)
                 mes_anio = datetime.now().strftime('%m%Y')
@@ -1308,7 +1307,8 @@ class Configuracion:
     def __init__(self):
         config = configparser.ConfigParser()
         config.read(
-            os.path.join('facturaciononline', 'static', 'recursos', 'conf.ini'),
+            os.path.join('/home', 'qrotest', 'portal', 'src', 'facturacion',
+                         'static', 'recursos', 'conf.ini'),
             encoding='utf-8'
         )
         self.ruta_general = config['Rutas'].get('general')
