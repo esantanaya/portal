@@ -140,8 +140,8 @@ def get_conceptos(idEmisor, idCertificado):
 
 
 def guarda_timbre(idEmisor, idCertificado, uuid, fecha_timbrado, sello_cfd,
-                   num_cert_sat, sello_sat, cadena_xml_original, cadena_xml,
-                   cadena_original, serie, num_cert_emi):
+                  num_cert_sat, sello_sat, cadena_xml_original, cadena_xml,
+                  cadena_original, serie, num_cert_emi):
     try:
         args_timbre = (idEmisor, idCertificado, '1.1', uuid, fecha_timbrado,
                        sello_cfd, num_cert_sat, sello_sat, cadena_xml_original,
@@ -157,6 +157,7 @@ def guarda_timbre(idEmisor, idCertificado, uuid, fecha_timbrado, sello_cfd,
         return False
     finally:
         cur.close()
+        con.commit()
         con.close()
 
 
