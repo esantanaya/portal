@@ -426,7 +426,6 @@ class Comprobante:
                 cad_xml = timbre.json().get('data').get('cfdi').encode()
                 elemento_xml = et.fromstring(cad_xml)
                 archivo_xml = et.ElementTree(elemento_xml)
-                breakpoint()
                 compdf = construye_comprobante(archivo_xml,
                                                self._nombre_archivo)
                 mes_anio = datetime.now().strftime('%m%Y')

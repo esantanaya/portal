@@ -29,7 +29,12 @@ def consulta(request):
         form = ConsultaForm(request.POST)
         if form.is_valid():
             agencia = form.cleaned_data['concesionaria']
-            factura = corrige_factura(form.cleaned_data['factura'])
+            try:
+                factura = corrige_factura(form.cleaned_data['factura'])
+            except IndexError:
+                return HttpResponseRedirect('/facturaciononline/')
+            except ValueError:
+                return HttpResponseRedirect('/facturaciononline/')
             total = form.cleaned_data['total']
             resp = consulta_valides(agencia, factura, total)
             if not resp:
