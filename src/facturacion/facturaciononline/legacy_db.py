@@ -13,11 +13,11 @@ def get_fecha_comp(agencia, factura):
     con = mysql.connector.connect(**conf)
     cur = con.cursor()
     if len(factura) > 7:
-        query = (f"select fecha from certificados where idEmisor = '{agencia}' and "
-                 f"idCertificado = '{factura}'")
+        query = ("select fecha from certificados where idEmisor = "
+                 f"'{agencia}' and idCertificado = '{factura}'")
     else:
-        query = (f"select fecha from certificados where idEmisor = '{agencia}' and "
-                 f"idCertificado = '02-UD10001-{factura}'")
+        query = (f"select fecha from certificados where idEmisor = "
+                 f"'{agencia}' and idCertificado = '02-UD10001-{factura}'")
     cur.execute(query)
     resultado = cur.fetchone()
     cur.close()
@@ -146,12 +146,12 @@ def guarda_timbre(idEmisor, idCertificado, uuid, fecha_timbrado, sello_cfd,
         args_timbre = (idEmisor, idCertificado, '1.1', uuid, fecha_timbrado,
                        sello_cfd, num_cert_sat, sello_sat, cadena_xml_original,
                        cadena_original)
-        args_xml = (idEmisor, idCertificado, '3.3', serie, sello_cfd[:255], 0, 0,
-                    num_cert_emi, cadena_original, cadena_xml)
+        args_xml = (idEmisor, idCertificado, '3.3', serie, sello_cfd[:255], 0,
+                    0, num_cert_emi, cadena_original, cadena_xml)
         con = mysql.connector.connect(**conf)
         cur = con.cursor()
-        res_timbre = cur.callproc('spGuardaTimbreCertificado', args_timbre)
-        res_xml = cur.callproc('spGuardaXmlCertificado', args_xml)
+        cur.callproc('spGuardaTimbreCertificado', args_timbre)
+        cur.callproc('spGuardaXmlCertificado', args_xml)
         return True
     except Exception:
         return False
@@ -161,4 +161,14 @@ def guarda_timbre(idEmisor, idCertificado, uuid, fecha_timbrado, sello_cfd,
         con.close()
 
 
-#def get_f33s(idEmisor, idCertificado):
+def get_datos_vehiculo(idEmisor, idCertificado):
+    con = mysql.connector.connect(**conf)
+    query = ("select marca, modelo, añoModelo, color, serie, kilometraje, "
+             "placas, motor, concat(tipoOrden, '-', folioOrden) as"
+             " referencia, recepcionista, siniestro, bonete from"
+             f" datosvehiculocertificado where idEmisor = '{idEmisor}' and"
+             f" idCertificado = '{idCertificado}'")
+    cur = con.cursor()
+    cur.execute(query)
+    resultado = cur.fetchone()
+    return resultado

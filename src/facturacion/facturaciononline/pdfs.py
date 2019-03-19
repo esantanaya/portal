@@ -1,12 +1,10 @@
 import os
-import re
-import traceback
 
 from lxml import etree as ET
 
-from .layout import ImpresionComprobante, ImpresionPago, ImpresionServicio
-from .comprobantePdf import (Comprobante, Concepto, DoctoRelacionado, Emisor, Pago,
-                         Receptor, TimbreFiscalDigital, Vehiculo)
+from .legacy_db import get_conceptos, get_cab_comp, get_datos_vehiculo
+from .comprobantePdf import (Comprobante, Concepto, DoctoRelacionado, Emisor,
+                             Pago, Receptor, TimbreFiscalDigital, Vehiculo)
 
 
 def construye_comprobante(tree, archivo):
@@ -107,70 +105,33 @@ def construye_comprobante(tree, archivo):
     return comprobante
 
 
-def cons_f33(comprobante, archivo_f33, mensaje=None):
+def cons_f33(comprobante):
     vehiculo = Vehiculo()
     conceptos = []
-    try:
-        with open(archivo_f33, 'r') as f33:
-            if mensaje:
-                print('Encontramos el F33 en errores!')
-            for linea in f33:
-                t_lin = linea.rstrip().split('|')
-                if t_lin[0] == 'CONCEPTO':
-                    concepto = Concepto(t_lin[1], t_lin[3], t_lin[11],
-                                        t_lin[2], t_lin[4], t_lin[6],
-                                        t_lin[5])
-                    conceptos.append(concepto)
-        with open(archivo_f33, 'r') as f33:
-            lineas = {
-                x.rstrip().split('|')[0]:
-                x.rstrip().split('|')[1:] for x in f33
-            }
-        comprobante.conceptos = conceptos
-        comprobante.total_letra = lineas['DOCUMENTO'][15]
-        comprobante.cuenta_pago = lineas['DOCUMENTO'][13]
-        comprobante.receptor.clave = lineas['CLIENTE'][0]
-        comprobante.receptor.calle = lineas['CLIENTE'][2]
-        comprobante.receptor.colonia = lineas['CLIENTE'][3]
-        comprobante.receptor.municipio = lineas['CLIENTE'][10]
-        comprobante.receptor.estado = lineas['CLIENTE'][11]
-        comprobante.receptor.pais = lineas['CLIENTE'][12]
-        comprobante.receptor.codigo_postal = lineas['CLIENTE'][7]
-        vehiculo.marca = lineas['VEHICULO'][1]
-        vehiculo.modelo = lineas['VEHICULO'][2]
-        vehiculo.anio = lineas['VEHICULO'][3]
-        vehiculo.color = lineas['VEHICULO'][4]
-        vehiculo.serie = lineas['VEHICULO'][0]
-        vehiculo.kilometraje = lineas['VEHICULO'][8]
-        vehiculo.placas = lineas['VEHICULO'][9]
-        vehiculo.motor = lineas['VEHICULO'][5]
-        vehiculo.referencia = (f'{lineas["VEHICULO"][6]}-'
-                               f'{lineas["VEHICULO"][7]}')
-        vehiculo.recepcionista = lineas['VEHICULO'][10]
-        vehiculo.siniestro = lineas['EXTRAS'][6]
-        vehiculo.bonete = lineas['EXTRAS'][7]
-    except IndexError:
-        vehiculo.siniestro = 'NA'
-        vehiculo.bonete = 'NA'
-    except FileNotFoundError:
-        raise FileNotFoundError
-    finally:
-        comprobante.vehiculo = vehiculo
+    datos_conceptos = get_conceptos(comprobante.emisor.rfc,
+                                    comprobante.nombre_archivo[:-4])
+    for reg in datos_conceptos:
+        concepto = Concepto(reg[0], reg[3], reg[4], reg[1],
+                            reg[5], str(reg[7]), str(reg[6]))
+        conceptos.append(concepto)
+    comprobante.conceptos = conceptos
+    datos_cab = get_cab_comp(comprobante.emisor.rfc,
+                             comprobante.nombre_archivo[:-4])
+    datos_veh = get_datos_vehiculo(comprobante.emisor.rfc,
+                                   comprobante.nombre_archivo[:-4])
+    comprobante.total_letra = datos_cab[7]
+    comprobante.cuenta_pago = datos_cab[8]
+    vehiculo.marca = datos_veh[0]
+    vehiculo.modelo = datos_veh[1]
+    vehiculo.anio = datos_veh[2]
+    vehiculo.color = datos_veh[3]
+    vehiculo.serie = datos_veh[4]
+    vehiculo.kilometraje = datos_veh[5]
+    vehiculo.placas = datos_veh[6]
+    vehiculo.motor = datos_veh[7]
+    vehiculo.referencia = datos_veh[8]
+    vehiculo.recepcionista = datos_veh[9]
+    vehiculo.siniestro = datos_veh[10]
+    vehiculo.bonete = datos_veh[11]
+    comprobante.vehiculo = vehiculo
     return comprobante
-
-
-def compl_comp_f33(comprobante, archivo_f33):
-    print(f'leyendo archivo {archivo_f33}')
-    try:
-        comprobante = cons_f33(comprobante, archivo_f33)
-    except FileNotFoundError as ffe:
-        print(f'{ffe} | Buscando en Errores!')
-        archivo_error = archivo_f33.replace('Procesado', 'Errores')
-        try:
-            comprobante = cons_f33(comprobante, archivo_error, 1)
-        except FileNotFoundError as e:
-            print(f'{e} | tampoco lo encontramos en errores!')
-            with open('errores.log', '+a') as log:
-                log.write('\n'+str(e))
-    finally:
-        return comprobante

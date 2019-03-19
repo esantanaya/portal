@@ -1,5 +1,4 @@
 import base64
-import csv
 import os
 import re
 import configparser
@@ -8,11 +7,11 @@ from datetime import datetime
 
 from lxml import etree as et
 from .chilkat import CkPrivateKey, CkRsa
-from django.conf import settings
 import requests
 
 from .legacy_db import get_emisor, guarda_timbre
-from .pdfs import construye_comprobante
+from .pdfs import construye_comprobante, cons_f33
+from .layout import ImpresionServicio
 
 
 logging.basicConfig(filename=os.path.join(
@@ -59,7 +58,8 @@ class Comprobante:
         self._namespaces = {'cfdi': self._xmlns_cfdi, 'xsi': self._xmlns_xsi}
         self._schemaLocation = (
             'http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/'
-            'cfd/3/cfdv33.xsd')
+            'cfd/3/cfdv33.xsd'
+        )
 
     @property
     def nombre_archivo(self):
@@ -125,7 +125,7 @@ class Comprobante:
     def subtotal(self, subtotal):
         self._subtotal = subtotal
 
-    #TODO cambiar el diccionario tipos por una BD
+    # TODO cambiar el diccionario tipos por una BD
     @property
     def tipo_comprobante(self):
         tipos = {
@@ -206,7 +206,7 @@ class Comprobante:
         self._pagos = pagos
 
     @property
-    def timbre    (self):
+    def timbre(self):
         return self._timbre
 
     @timbre.setter
@@ -249,7 +249,7 @@ class Comprobante:
         nv = Utilidades.no_vacio
         sd = Utilidades.seis_decimales
         dd = Utilidades.dos_decimales
-        #TODO Esto debe de ir en BD
+        # TODO Esto debe de ir en BD
         self._emisor.get_emisor()
         self._certificado = Certificado(self._emisor.nom_archivo_certificado,
                                         self._emisor.nro_certificado,
@@ -275,7 +275,7 @@ class Comprobante:
                 'Total': dd(self._total),
                 'Version': self._version,
             })
-        #Emisor
+        # Emisor
         et.SubElement(
             elemento,
             f'{{{self._xmlns_cfdi}}}Emisor',
@@ -286,7 +286,7 @@ class Comprobante:
                 'Rfc': self._emisor.rfc,
             }
         )
-        #Receptor
+        # Receptor
         et.SubElement(
             elemento,
             f'{{{self._xmlns_cfdi}}}Receptor',
@@ -297,7 +297,7 @@ class Comprobante:
                 'UsoCFDI': self._receptor.uso_cfdi,
             }
         )
-        #Conceptos
+        # Conceptos
         el_conceptos = et.SubElement(
             elemento,
             f'{{{self._xmlns_cfdi}}}Conceptos',
@@ -369,7 +369,7 @@ class Comprobante:
     def sella_xml(self, xml):
         conf = Configuracion()
         ruta_llave = os.sep.join([conf.ruta('llave'),
-                               self._emisor.nom_archivo_llave])
+                                  self._emisor.nom_archivo_llave])
         pswd = self._emisor.pswd_archivo_llave
         p_key = CkPrivateKey()
         success = p_key.LoadPkcs8EncryptedFile(ruta_llave, pswd)
@@ -428,6 +428,15 @@ class Comprobante:
                 archivo_xml = et.ElementTree(elemento_xml)
                 compdf = construye_comprobante(archivo_xml,
                                                self._nombre_archivo)
+                compdf = cons_f33(compdf)
+                compdf.receptor.calle = self.receptor.calle
+                compdf.receptor.colonia = self.receptor.colonia
+                compdf.receptor.municipio = self.receptor.municipio
+                compdf.receptor.estado = self.receptor.estado
+                compdf.receptor.pais = self.receptor.pais
+                compdf.receptor.codigo_postal = self.receptor.codigo_postal
+                imp_ser = ImpresionServicio(compdf)
+                imp_ser.genera_pdf()
                 mes_anio = datetime.now().strftime('%m%Y')
                 try:
                     guarda_timbre(self.emisor.rfc, self.nombre_archivo[:-4],
@@ -746,7 +755,7 @@ class Concepto:
 
     @property
     def clave_unidad(self):
-        #Reemplazos comunes de clave en kepler
+        # Reemplazos comunes de clave en kepler
         reem_com = {
             'PZA': 'H87',
             'PIE': 'H87',
@@ -1222,7 +1231,7 @@ class NombreComprobante:
     def serie(self):
         try:
             self._serie = re.findall(r'[A-Z]+', self._nombre_completo)[0]
-        except:
+        except Exception:
             pass
 
         return self._serie
@@ -1231,7 +1240,7 @@ class NombreComprobante:
     def folio(self):
         try:
             self._folio = re.findall(r'\d+', self._nombre_completo)[0]
-        except:
+        except Exception:
             pass
 
         return self._folio

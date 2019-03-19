@@ -3,8 +3,7 @@ from django.http import HttpResponseRedirect
 
 from .forms import ConsultaForm, DatosForm
 from .legacy_db import (consulta_valides, datos_cliente, get_cab_comp,
-                        get_impuestos, get_lugar_expedicion, get_conceptos,
-                        get_fecha_comp)
+                        get_impuestos, get_conceptos, get_fecha_comp)
 from .comprobante import Receptor, Emisor, Comprobante, Impuestos, Concepto
 
 
@@ -116,7 +115,7 @@ def timbre(request):
             for reg in datos_con:
                 tasa = 0.160000
                 concepto = Concepto(reg[0], reg[3], reg[1], reg[5],
-                                    reg[7] , reg[6], '002', tasa,
+                                    reg[7], reg[6], '002', tasa,
                                     reg[8], reg[7], 'Tasa')
                 conceptos.append(concepto)
             comprobante.conceptos = conceptos
