@@ -253,7 +253,7 @@ class Comprobante:
         self._emisor.get_emisor()
         self._certificado = Certificado(self._emisor.nom_archivo_certificado,
                                         self._emisor.nro_certificado,
-                                        r'\\192.168.24.10|e$|cfd|Certificados')
+                                        '/home|qrotest|portal|Utilidades|Certificados')
         self._lugar_expedicion = self._emisor.codigo_postal
         attr_schema = et.QName(self._xmlns_xsi, 'schemaLocation')
         elemento = et.Element(
@@ -1320,7 +1320,8 @@ class Configuracion:
     def __init__(self):
         config = configparser.ConfigParser()
         config.read(
-            os.path.join('facturaciononline', 'static', 'recursos', 'conf.ini'),
+            os.path.join('/home', 'qrotest', 'portal', 'src', 'facturacion',
+                         'static', 'recursos', 'conf.ini'),
             encoding='utf-8'
         )
         self.ruta_general = config['Rutas'].get('general')
