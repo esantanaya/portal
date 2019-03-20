@@ -1,5 +1,9 @@
+import os
+from zipfile import ZipFile
+from io import BytesIO
+
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
 from .forms import ConsultaForm, DatosForm
 from .legacy_db import (consulta_valides, datos_cliente, get_cab_comp,
@@ -127,3 +131,29 @@ def timbre(request):
                 'mes_anio': fecha.strftime('%m%Y'),
             }
             return render(request, 'facturaciononline/descarga.html', context)
+
+
+def zipper(request):
+    if request.method == 'GET':
+        info_ars = request.GET
+        agencia = info_ars['agencia']
+        mes_anio = info_ars['mes_anio']
+        archivo = info_ars['archivo']
+        ruta_archivo = os.path.join('facturaciononline', 'static', 'facturas',
+                                    agencia, mes_anio, archivo)
+        filenames = [f'{ruta_archivo}.xml', f'{ruta_archivo}.pdf']
+        b = BytesIO()
+
+        zip = ZipFile(b, 'w')
+
+        for ruta in filenames:
+            path_archivo, real_archivo = os.path.split(ruta)
+            zip.write(ruta, os.path.join('factura', real_archivo))
+        zip.close()
+
+        resp = HttpResponse(
+            b.getvalue(),
+            content_type='application/x-zip-compressed',
+        )
+        resp['Content-Disposition'] = f'attachment; filename={archivo}.zip'
+        return resp

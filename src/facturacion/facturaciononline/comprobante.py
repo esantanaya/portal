@@ -454,6 +454,7 @@ class Comprobante:
                             'facturaciononline',
                             'static',
                             'facturas',
+                            self._emisor.rfc,
                             mes_anio,
                             self._nombre_archivo
                         ),
@@ -467,6 +468,7 @@ class Comprobante:
                             'facturaciononline',
                             'static',
                             'facturas',
+                            self._emisor.rfc,
                             mes_anio,
                         ))
                         archivo_xml.write(
@@ -474,6 +476,7 @@ class Comprobante:
                                 'facturaciononline',
                                 'static',
                                 'facturas',
+                                self._emisor.rfc,
                                 mes_anio,
                                 self._nombre_archivo
                             ),
@@ -486,10 +489,11 @@ class Comprobante:
 
 
 class Emisor:
-    def __init__(self, rfc, nombre=None, regimen_fiscal=None, calle_numero=None,
-                 colonia=None, ciudad=None, estado_pais=None, codigo_postal=None,
-                 nro_certificado=None, nom_archivo_certificado=None,
-                 nom_archivo_llave=None, pswd_archivo_llave=None):
+    def __init__(self, rfc, nombre=None, regimen_fiscal=None,
+                 calle_numero=None, colonia=None, ciudad=None,
+                 estado_pais=None, codigo_postal=None, nro_certificado=None,
+                 nom_archivo_certificado=None, nom_archivo_llave=None,
+                 pswd_archivo_llave=None):
         self._rfc = rfc
         self._nombre = nombre
         self._regimen_fiscal = regimen_fiscal
