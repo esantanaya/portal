@@ -5,4 +5,5 @@ urlpatterns = [
     path('', views.consulta_carga),
     path('consulta/', views.consulta),
     path('timbre/', views.timbre),
+    path('zipper/', views.zipper),
 ]

@@ -4,4 +4,5 @@ db.sqlite3
 *.pdf
 *.log
 *.f33
+*.zip
 *~

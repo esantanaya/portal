@@ -4,10 +4,10 @@
 {% block content %}
 <div id="archivos">
   <div class="arleft">
-    <a href="{% static "facturas/" %}{{mes_anio}}/{{idCertificado}}.xml" download id="pdf" class="descarga">Descarga</a>
+    <a href="{% static "facturas/" %}{{agencia}}/{{mes_anio}}/{{idCertificado}}.pdf" download id="pdf" class="descarga">Descarga</a>
   </div>
   <div class="arright">
-    <a href="" id="zip" class="descarga">Descarga</a>
+    <a href="/facturaciononline/zipper?agencia={{agencia}}&mes_anio={{mes_anio}}&archivo={{idCertificado}}" id="zip" class="descarga">Descarga</a>
   </div>
 </div>
 <div id="correo">

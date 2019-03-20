@@ -424,19 +424,9 @@ class Emisor:
 
 class Receptor:
 
-    def __init__(
-        self,
-        nombre,
-        rfc,
-        uso_cfdi,
-        clave=None,
-        calle=None,
-        colonia=None,
-        municipio=None,
-        estado=None,
-        pais=None,
-        codigo_postal=None,
-    ):
+    def __init__(self, nombre, rfc, uso_cfdi, clave=None, calle=None,
+                 colonia=None, municipio=None, estado=None, pais=None,
+                 codigo_postal=None):
         self._nombre = nombre
         self._rfc = rfc
         self._uso_cfdi = uso_cfdi
@@ -530,17 +520,8 @@ class Receptor:
 
 
 class Concepto:
-    def __init__(
-        self,
-        cantidad,
-        clave_prod_serv,
-        clave_interna,
-        clave_unidad,
-        descripcion,
-        importe,
-        valor_unitario,
-
-    ):
+    def __init__(self, cantidad, clave_prod_serv, clave_interna, clave_unidad,
+                 descripcion, importe, valor_unitario):
         self._cantidad = cantidad
         self._clave_prod_serv = clave_prod_serv
         self._clave_interna = clave_interna

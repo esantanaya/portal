@@ -55,7 +55,8 @@ class ImpresionComprobante:
             'facturaciononline',
             'static',
             'facturas',
-            self._comprobante.fecha.strftime('%m%Y'),
+            self._comprobante.emisor.rfc,
+            self._comprobante.fecha[5:7] + self._comprobante.fecha[:4],
             self._comprobante.nombre_archivo[:-4] + '.pdf'
         )
         self._ruta_logos = ''
