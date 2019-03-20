@@ -474,7 +474,7 @@ class ImpresionComprobante:
                     'static',
                     'recursos',
                     'catalogos.db',
-                )
+                ),
                 encoding='utf-8'
             ) as catalogo:
                 for linea in catalogo:
@@ -730,7 +730,7 @@ class ImpresionPago(ImpresionComprobante):
                     'static',
                     'recursos',
                     'catalogos.db',
-                )
+                ),
                 encoding='utf-8'
             ) as catalogo:
                 for linea in catalogo:
