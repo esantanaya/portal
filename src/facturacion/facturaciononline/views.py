@@ -139,8 +139,18 @@ def zipper(request):
         agencia = info_ars['agencia']
         mes_anio = info_ars['mes_anio']
         archivo = info_ars['archivo']
-        ruta_archivo = os.path.join('facturaciononline', 'static', 'facturas',
-                                    agencia, mes_anio, archivo)
+        ruta_archivo = os.path.join(
+            '/home',
+            'qrotest',
+            'portal',
+            'src',
+            'facturacion',
+            'static',
+            'facturas',
+            agencia,
+            mes_anio,
+            archivo,
+        )
         filenames = [f'{ruta_archivo}.xml', f'{ruta_archivo}.pdf']
         b = BytesIO()
 

@@ -52,7 +52,11 @@ class ImpresionComprobante:
 
     def _rutas(self):
         self.nombre = os.path.join(
-            'facturaciononline',
+            '/home',
+            'qrotest',
+            'portal',
+            'src',
+            'facturacion',
             'static',
             'facturas',
             self._comprobante.emisor.rfc,

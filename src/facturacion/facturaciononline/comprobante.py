@@ -451,7 +451,11 @@ class Comprobante:
                                   timbre.json()['data']['noCertificadoCFDI'])
                     archivo_xml.write(
                         os.path.join(
-                            'facturaciononline',
+                            '/home',
+                            'qrotest',
+                            'portal',
+                            'src',
+                            'facturacion',
                             'static',
                             'facturas',
                             self._emisor.rfc,
@@ -465,7 +469,11 @@ class Comprobante:
                 except FileNotFoundError:
                     try:
                         os.mkdir(os.path.join(
-                            'facturaciononline',
+                            '/home',
+                            'qrotest',
+                            'portal',
+                            'src',
+                            'facturacion',
                             'static',
                             'facturas',
                             self._emisor.rfc,
@@ -473,7 +481,11 @@ class Comprobante:
                         ))
                         archivo_xml.write(
                             os.path.join(
-                                'facturaciononline',
+                                '/home',
+                                'qrotest',
+                                'portal',
+                                'src',
+                                'facturacion',
                                 'static',
                                 'facturas',
                                 self._emisor.rfc,
