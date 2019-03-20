@@ -464,7 +464,19 @@ class ImpresionComprobante:
 
     def resuelve_codigos(self):
         try:
-            with open('catalogos.db', encoding='utf-8') as catalogo:
+            with open(
+                os.path.join(
+                    '/home',
+                    'qrotest',
+                    'portal',
+                    'src',
+                    'facturacion',
+                    'static',
+                    'recursos',
+                    'catalogos.db',
+                )
+                encoding='utf-8'
+            ) as catalogo:
                 for linea in catalogo:
                     linea = linea.strip()
                     if linea.startswith('[') and linea.endswith(']'):
@@ -708,7 +720,19 @@ class ImpresionPago(ImpresionComprobante):
 
     def resuelve_codigos(self):
         try:
-            with open('catalogos.db', encoding='utf-8') as catalogo:
+            with open(
+                os.path.join(
+                    '/home',
+                    'qrotest',
+                    'portal',
+                    'src',
+                    'facturacion',
+                    'static',
+                    'recursos',
+                    'catalogos.db',
+                )
+                encoding='utf-8'
+            ) as catalogo:
                 for linea in catalogo:
                     linea = linea.strip()
                     if linea.startswith('[') and linea.endswith(']'):
