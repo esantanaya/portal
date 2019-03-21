@@ -15,7 +15,11 @@ from .layout import ImpresionServicio
 
 
 logging.basicConfig(filename=os.path.join(
-                        'facturaciononline',
+                        '/home',
+                        'qrotest',
+                        'portal',
+                        'src',
+                        'facturacion',
                         'static',
                         'logs',
                         'comprobante.log',
