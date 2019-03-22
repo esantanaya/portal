@@ -390,6 +390,7 @@ class Comprobante:
         success = rsa.ImportPrivateKey(key_xml)
         if not success:
             raise CFDIError('No se pudo importar el xml dentro del RSA')
+        rsa.put_Charset('utf-8')
         rsa.put_EncodingMode('base64')
         rsa.put_LittleEndian(False)
         sello = rsa.signStringENC(cadena, 'sha256')
@@ -411,7 +412,7 @@ class Comprobante:
                 'Authorization': f'token {token}'
             }
             xml = self.crea_xml()
-            xml = et.tostring(xml)
+            xml = et.tostring(xml, encoding='utf-8')
             xml = base64.b64encode(xml)
             xml = xml.decode('utf-8')
             data = {
@@ -419,7 +420,8 @@ class Comprobante:
             }
             timbre = requests.post(conf.url_timbre, headers=headers, json=data)
             if timbre.status_code != 200:
-                raise CFDIError('No se pudo timbrar el CFDI '
+                raise CFDIError(f'No se pudo timbrar el CFDI {self.serie}-'
+                                f'{self.folio} '
                                 f'Códgio de error: {timbre.status_code} '
                                 f'Mensaje: {timbre.json()["message"]}')
             else:
