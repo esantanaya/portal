@@ -41,7 +41,7 @@ select {
   background: url('../images/flecha.svg') no-repeat;
 }
 
-input[type=text], input[type=number], select {
+input[type=text], input[type=number], input[type=email], select {
   height: 47px;
   border: 1px solid #8F8F8F;
   border-radius: 6px;
@@ -69,11 +69,17 @@ a.titulo{
   color: #ECF9F3;
 }
 
+div.arleft, div.arright{
+  width: 50%;
+  float: left;
+}
+
 a.descarga{
   width: 100px;
   height: 100px;
   float: left;
   padding-top: 100px;
+  margin-left: 45%;
 }
 
 a#pdf{
@@ -94,6 +100,13 @@ div.row{
   display: block;
   width: 100%;
   margin: 18.5px 0;
+}
+
+div.dfrow{
+  float: left;
+  display: block;
+  width: 100%;
+  margin: 11.5px 0;
 }
 
 div.leftForm, div.rightForm{
@@ -132,4 +145,44 @@ div#archivos{
   float: left;
   height: auto;
   text-align: center;
+}
+
+div.cleft{
+  width: 60%;
+  display: block;
+  float: left;
+  text-align: left;
+}
+
+div.cright{
+  width: 40%;
+  display: block;
+  float: left;
+  text-align: right;
+}
+
+input.dostreinta{
+  width: 260px;
+}
+
+select#id_uso_cfdi{
+  width: 350px;
+}
+
+ul.errorlist{
+  margin-top: -19.2px;
+}
+
+input#id_cp{
+  width: 107px;
+}
+
+input.seiscientos{
+  width: 600px;
+}
+
+img{
+  width: 100px;
+  height: 100px;
+  margin-bottom: 30px;
 }

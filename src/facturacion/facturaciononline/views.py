@@ -4,8 +4,9 @@ from io import BytesIO
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
+from django.core.mail import EmailMessage
 
-from .forms import ConsultaForm, DatosForm
+from .forms import ConsultaForm, DatosForm, CorreoForm
 from .legacy_db import (consulta_valides, datos_cliente, get_cab_comp,
                         get_impuestos, get_conceptos, get_fecha_comp)
 from .comprobante import Receptor, Emisor, Comprobante, Impuestos, Concepto
@@ -49,6 +50,11 @@ def consulta(request):
                     'agencia': agencia,
                     'idCertificado': resp[1],
                     'mes_anio': fecha.strftime('%m%Y'),
+                    'correo_form': CorreoForm({
+                        'agencia': agencia,
+                        'idCertificado': resp[1],
+                        'mes_anio': fecha.strftime('%m%Y')
+                    }),
                 }
                 return render(request, 'facturaciononline/descarga.html',
                               context)
@@ -129,6 +135,11 @@ def timbre(request):
                 'agencia': agencia,
                 'idCertificado': id_comp,
                 'mes_anio': fecha.strftime('%m%Y'),
+                'correo_form': CorreoForm({
+                    'agencia': agencia,
+                    'idCertificado': id_comp,
+                    'mes_anio': fecha.strftime('%m%Y'),
+                }),
             }
             return render(request, 'facturaciononline/descarga.html', context)
 
@@ -167,3 +178,24 @@ def zipper(request):
         )
         resp['Content-Disposition'] = f'attachment; filename={archivo}.zip'
         return resp
+
+
+def envio_correo(request):
+    if request.method == 'POST':
+        form = CorreoForm(request.POST)
+        if form.is_valid():
+            archivo = form.cleaned_data['idCertificado']
+            agencia = form.cleaned_data['agencia']
+            mes_anio = form.cleaned_data['mes_anio']
+            ruta_archivo = os.path.join('facturaciononline', 'static',
+                                        'facturas', agencia, mes_anio, archivo)
+            email = EmailMessage(
+                'Su factura',
+                'Le enviamos su factura',
+                'facturas@prolecsa.mx',
+                [form.cleaned_data['correo']],
+            )
+            email.attach_file(f'{ruta_archivo}.pdf')
+            email.attach_file(f'{ruta_archivo}.xml')
+            email.send()
+        return HttpResponseRedirect('/facturaciononline/')

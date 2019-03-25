@@ -11,6 +11,16 @@
   </div>
 </div>
 <div id="correo">
-
+  <form method="post" action="/facturaciononline/correo/" id="form_correos">
+    {% csrf_token %}
+    <img src="{% static "images/email.svg" %}" alt="">
+    <div class="field_wrapper">
+      {% for field in correo_form %}
+        {{ field.errors }}
+        {{ field }}
+      {% endfor %}
+    </div>
+    <input type="submit" value="Enviar">
+  </form>
 </div>
 {% endblock %}

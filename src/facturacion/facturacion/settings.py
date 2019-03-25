@@ -136,6 +136,8 @@ EMAIL_HOST_PASSWORD = 'd#M~mzC5n++G'
 
 EMAIL_HOST_USER = 'facturas@prolecsa.com.mx'
 
-EMAIL_PORT = 465
+EMAIL_PORT = 587
 
 EMAIL_USE_TLS = True
+
+ADMINS = [('Enrique Santana', 'esantana@prolecsa.mx')]
