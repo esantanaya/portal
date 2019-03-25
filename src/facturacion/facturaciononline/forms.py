@@ -42,22 +42,31 @@ class DatosForm(forms.Form):
     idCertificado = forms.CharField(widget=forms.HiddenInput())
     agencia = forms.CharField(widget=forms.HiddenInput())
     rfc = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': 'R.F.C.'}
+        attrs={'placeholder': 'R.F.C.', 'class': 'dostreinta'}
     ))
     uso_cfdi = forms.ChoiceField(choices=CHOICES_DATOS, required=True)
     razon_social = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': 'Razón Social'}
+        attrs={'placeholder': 'Razón Social', 'class': 'seiscientos'}
     ))
     calle = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': 'Calle y número'}
+        attrs={'placeholder': 'Calle y número', 'class': 'seiscientos'}
     ))
     cp = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'C.P.'}))
     colonia = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': 'Colonia'}
+        attrs={'placeholder': 'Colonia', 'class': 'dostreinta'}
     ))
     municipio = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': 'Municipio'}
+        attrs={'placeholder': 'Municipio', 'class': 'dostreinta'}
     ))
     estado = forms.CharField(widget=forms.TextInput(
-        attrs={'placeholder': 'Estado'}
+        attrs={'placeholder': 'Estado', 'class': 'dostreinta'}
     ))
+
+
+class CorreoForm(forms.Form):
+    correo = forms.EmailField(widget=forms.EmailInput(
+        attrs={'placeholder': 'Correo Electrónico'}
+    ))
+    agencia = forms.CharField(widget=forms.HiddenInput())
+    idCertificado = forms.CharField(widget=forms.HiddenInput())
+    mes_anio = forms.CharField(widget=forms.HiddenInput())

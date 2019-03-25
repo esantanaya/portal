@@ -1,14 +1,58 @@
 {% extends "facturaciononline/base.html" %}
 
 {% block content %}
+<p>Ingresa los datos físcales que aparecerán en la factura</p>
 <form action="/facturaciononline/timbre/" method="post" id="form_datos">
   {% csrf_token %}
-  {% for field in form %}
-  <div class="fieldWrapper">
-    {{ field.errors }}
-    {{ field }}
+  {{ form.non_field_errors }}
+  {{ form.idCertificado }}
+  {{ form.agencia }}
+  <div class="dfrow">
+    <div class="cleft">
+      {{ form.rfc.errors }}
+      {{ form.rfc }}
+    </div>
+    <div class="cright">
+      {{ form.uso_cfdi.errors }}
+      {{ form.uso_cfdi }}
+    </div>
   </div>
-  {% endfor %}
+  <div class="dfrow">
+    <div class="cleft">
+      {{ form.razon_social.errors }}
+      {{ form.razon_social }}
+    </div>
+  </div>
+  <div class="dfrow">
+    <div class="cleft">
+      {{ form.calle.errors }}
+      {{ form.calle }}
+    </div>
+  </div>
+  <div class="dfrow">
+    <div class="cleft">
+      {{ form.cp.errors }}
+      {{ form.cp }}
+    </div>
+  </div>
+  <div class="dfrow">
+    <div class="cleft">
+      {{ form.colonia.errors }}
+      {{ form.colonia }}
+    </div>
+  </div>
+  <div class="dfrow">
+    <div class="cleft">
+      {{ form.municipio.errors }}
+      {{ form.municipio }}
+    </div>
+  </div>
+  <div class="dfrow">
+    <div class="cleft">
+      {{ form.estado.errors }}
+      {{ form.estado }}
+    </div>
+  </div>
   <input type="submit" value="Enviar">
 </form>
 {% endblock %}

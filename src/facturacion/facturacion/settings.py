@@ -108,7 +108,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Mexico_City'
 
 USE_I18N = True
 
@@ -130,8 +130,8 @@ EMAIL_HOST_PASSWORD = 'd#M~mzC5n++G'
 
 EMAIL_HOST_USER = 'facturas@prolecsa.com.mx'
 
-EMAIL_PORT = 465
+EMAIL_PORT = 587
 
 EMAIL_USE_TLS = True
 
-EMAIL_USE_SSL = True
+ADMINS = [('Enrique Santana', 'esantana@prolecsa.mx')]
