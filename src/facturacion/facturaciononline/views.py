@@ -187,8 +187,18 @@ def envio_correo(request):
             archivo = form.cleaned_data['idCertificado']
             agencia = form.cleaned_data['agencia']
             mes_anio = form.cleaned_data['mes_anio']
-            ruta_archivo = os.path.join('facturaciononline', 'static',
-                                        'facturas', agencia, mes_anio, archivo)
+            ruta_archivo = os.path.join(
+                '/home',
+                'qrotest',
+                'portal',
+                'src',
+                'facturacion',
+                'static',
+                'facturas', 
+                agencia, 
+                mes_anio, 
+                archivo,
+            )
             email = EmailMessage(
                 'Su factura',
                 'Le enviamos su factura',
