@@ -1,6 +1,7 @@
 import os
 from zipfile import ZipFile
 from io import BytesIO
+from datetime import datetime
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
@@ -104,7 +105,7 @@ def timbre(request):
             impuesto = Impuestos(datos_imp[2], '002', datos_imp[1], 'Tasa')
             comprobante = Comprobante(
                 id_comp,
-                datos_cab[0].strftime('%Y-%m-%dT%H:%M:%S'),
+                datetime.now().strftime('%Y/%m/%dT%H:%M:%S'),
                 datos_cab[1],
                 datos_cab[2],
                 str(datos_cab[3]),
