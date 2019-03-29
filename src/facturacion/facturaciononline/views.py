@@ -80,6 +80,8 @@ def consulta(request):
                     'form': d_form,
                 }
                 return render(request, 'facturaciononline/datos.html', context)
+    else:
+        return HttpResponseRedirect('/facturaciononline/')
 
 
 def timbre(request):
@@ -143,6 +145,8 @@ def timbre(request):
                 }),
             }
             return render(request, 'facturaciononline/descarga.html', context)
+    else:
+        return HttpResponseRedirect('/facturaciononline/')
 
 
 def zipper(request):
