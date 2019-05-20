@@ -6,3 +6,6 @@ db.sqlite3
 *.f33
 *.zip
 *~
+Utilidades/
+*__pycache__/
+src/facturacion/static/

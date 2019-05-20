@@ -130,9 +130,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 
 # Configuracion para correo
 
-EMAIL_HOST = 's16038.svrdatacenter.com'
+EMAIL_HOST = 's16168.svrdatacenter.com'
 
-EMAIL_HOST_PASSWORD = 'd#M~mzC5n++G'
+EMAIL_HOST_PASSWORD = 'xm2D3$JrRr~#'
 
 EMAIL_HOST_USER = 'facturas@prolecsa.com.mx'
 
