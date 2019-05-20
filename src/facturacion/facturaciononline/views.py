@@ -91,9 +91,9 @@ def timbre(request):
             agencia = form.cleaned_data['agencia']
             id_comp = form.cleaned_data['idCertificado']
             receptor = Receptor(
-                form.cleaned_data['razon_social'],
-                form.cleaned_data['rfc'],
-                form.cleaned_data['uso_cfdi'],
+                form.cleaned_data['razon_social'].upper(),
+                form.cleaned_data['rfc'].upper(),
+                form.cleaned_data['uso_cfdi'].upper(),
                 calle=form.cleaned_data['calle'],
                 colonia=form.cleaned_data['colonia'],
                 municipio=form.cleaned_data['municipio'],
