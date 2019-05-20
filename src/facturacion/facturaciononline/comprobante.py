@@ -766,6 +766,7 @@ class Concepto:
             'PZA': 'H87',
             'PIE': 'H87',
             'LT': 'LTR',
+            'LIT': 'LTR',
             '': 'C62',
         }
         if self._clave_unidad in reem_com:
