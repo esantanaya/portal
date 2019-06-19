@@ -30,29 +30,29 @@ class Comprobante:
                  metodo_pago, total_letra, cuenta_pago, impuesto, moneda='MXN',
                  sello=None, lugar_expedicion=None, conceptos=None, pagos=None,
                  timbre=None, certificado=None, nro_certificado=None):
-        self._nombre_archivo = f'{nombre_archivo}.xml'
-        self._fecha = fecha
-        self._serie = serie
-        self._folio = folio
-        self._subtotal = subtotal
-        self._total = total
-        self._tipo_comprobante = tipo_comprobante
-        self._version = version
-        self._emisor = emisor
-        self._receptor = receptor
-        self._forma_pago = forma_pago
-        self._metodo_pago = metodo_pago
-        self._total_letra = total_letra
-        self._cuenta_pago = cuenta_pago
-        self._impuesto = impuesto
-        self._moneda = moneda
-        self._sello = sello
-        self._lugar_expedicion = lugar_expedicion
-        self._conceptos = conceptos
-        self._pagos = pagos
-        self._timbre = timbre
-        self._certificado = certificado
-        self._nro_certificado = nro_certificado
+        self.nombre_archivo = nombre_archivo
+        self.fecha = fecha
+        self.serie = serie
+        self.folio = folio
+        self.subtotal = subtotal
+        self.total = total
+        self.tipo_comprobante = tipo_comprobante
+        self.version = version
+        self.emisor = emisor
+        self.receptor = receptor
+        self.forma_pago = forma_pago
+        self.metodo_pago = metodo_pago
+        self.total_letra = total_letra
+        self.cuenta_pago = cuenta_pago
+        self.impuesto = impuesto
+        self.moneda = moneda
+        self.sello = sello
+        self.lugar_expedicion = lugar_expedicion
+        self.conceptos = conceptos
+        self.pagos = pagos
+        self.timbre = timbre
+        self.certificado = certificado
+        self.nro_certificado = nro_certificado
         self._xmlns_cfdi = 'http://www.sat.gob.mx/cfd/3'
         self._xmlns_xsi = 'http://www.w3.org/2001/XMLSchema-instance'
         self._namespaces = {'cfdi': self._xmlns_cfdi, 'xsi': self._xmlns_xsi}
@@ -496,18 +496,18 @@ class Emisor:
                  estado_pais=None, codigo_postal=None, nro_certificado=None,
                  nom_archivo_certificado=None, nom_archivo_llave=None,
                  pswd_archivo_llave=None):
-        self._rfc = rfc
-        self._nombre = nombre
-        self._regimen_fiscal = regimen_fiscal
-        self._calle_numero = calle_numero
-        self._colonia = colonia
-        self._ciudad = ciudad
-        self._estado_pais = estado_pais
-        self._codigo_postal = codigo_postal
-        self._nro_certificado = nro_certificado
-        self._nom_archivo_certificado = nom_archivo_certificado
-        self._nom_archivo_llave = nom_archivo_llave
-        self._pswd_archivo_llave = pswd_archivo_llave
+        self.rfc = rfc
+        self.nombre = nombre
+        self.regimen_fiscal = regimen_fiscal
+        self.calle_numero = calle_numero
+        self.colonia = colonia
+        self.ciudad = ciudad
+        self.estado_pais = estado_pais
+        self.codigo_postal = codigo_postal
+        self.nro_certificado = nro_certificado
+        self.nom_archivo_certificado = nom_archivo_certificado
+        self.nom_archivo_llave = nom_archivo_llave
+        self.pswd_archivo_llave = pswd_archivo_llave
 
     @property
     def nombre(self):
@@ -633,16 +633,16 @@ class Receptor:
     def __init__(self, nombre, rfc, uso_cfdi, clave=None, calle=None,
                  colonia=None, municipio=None, estado=None, pais=None,
                  codigo_postal=None):
-        self._nombre = nombre
-        self._rfc = rfc
-        self._uso_cfdi = uso_cfdi
-        self._clave = clave
-        self._calle = calle
-        self._colonia = colonia
-        self._municipio = municipio
-        self._estado = estado
-        self._pais = pais
-        self._codigo_postal = codigo_postal
+        self.nombre = nombre
+        self.rfc = rfc
+        self.uso_cfdi = uso_cfdi
+        self.clave = clave
+        self.calle = calle
+        self.colonia = colonia
+        self.municipio = municipio
+        self.estado = estado
+        self.pais = pais
+        self.codigo_postal = codigo_postal
 
     @property
     def clave(self):
@@ -729,17 +729,17 @@ class Concepto:
     def __init__(self, cantidad, clave_prod_serv, clave_unidad, descripcion,
                  importe, valor_unitario, tipo_impuesto, tasa_cuota,
                  importe_impuesto, base_impuesto, tipo_factor):
-        self._cantidad = cantidad
-        self._clave_prod_serv = clave_prod_serv
-        self._clave_unidad = clave_unidad
-        self._descripcion = descripcion
-        self._importe = importe
-        self._valor_unitario = valor_unitario
-        self._tipo_impuesto = tipo_impuesto
-        self._tasa_cuota = tasa_cuota
-        self._importe_impuesto = importe_impuesto
-        self._base_impuesto = base_impuesto
-        self._tipo_factor = tipo_factor
+        self.cantidad = cantidad
+        self.clave_prod_serv = clave_prod_serv
+        self.clave_unidad = clave_unidad
+        self.descripcion = descripcion
+        self.importe = importe
+        self.valor_unitario = valor_unitario
+        self.tipo_impuesto = tipo_impuesto
+        self.tasa_cuota = tasa_cuota
+        self.importe_impuesto = importe_impuesto
+        self.base_impuesto = base_impuesto
+        self.tipo_factor = tipo_factor
 
     @property
     def cantidad(self):
@@ -844,10 +844,10 @@ class Concepto:
 
 class Impuestos:
     def __init__(self, total, impuesto, tasa_cuota, tipo_factor):
-        self._total = total
-        self._impuesto = impuesto
-        self._tasa_cuota = tasa_cuota
-        self._tipo_factor = tipo_factor
+        self.total = total
+        self.impuesto = impuesto
+        self.tasa_cuota = tasa_cuota
+        self.tipo_factor = tipo_factor
 
     @property
     def total(self):
@@ -883,27 +883,18 @@ class Impuestos:
 
 
 class DoctoRelacionado:
-    def __init__(
-        self,
-        folio,
-        id_documento,
-        imp_pagado,
-        imp_saldo_ant,
-        imp_saldo_insoluto,
-        metodo_pago_dr,
-        moneda_dr,
-        num_parcialidad,
-        serie
-    ):
-        self._folio = folio
-        self._id_documento = id_documento
-        self._imp_pagado = imp_pagado
-        self._imp_saldo_ant = imp_saldo_ant
-        self._imp_saldo_insoluto = imp_saldo_insoluto
-        self._metodo_pago_dr = metodo_pago_dr
-        self._moneda_dr = moneda_dr
-        self._num_parcialidad = num_parcialidad
-        self._serie = serie
+    def __init__(self, folio, id_documento, imp_pagado, imp_saldo_ant,
+                 imp_saldo_insoluto, metodo_pago_dr, moneda_dr,
+                 num_parcialidad, serie):
+        self.folio = folio
+        self.id_documento = id_documento
+        self.imp_pagado = imp_pagado
+        self.imp_saldo_ant = imp_saldo_ant
+        self.imp_saldo_insoluto = imp_saldo_insoluto
+        self.metodo_pago_dr = metodo_pago_dr
+        self.moneda_dr = moneda_dr
+        self.num_parcialidad = num_parcialidad
+        self.serie = serie
 
     @property
     def folio(self):
@@ -979,20 +970,13 @@ class DoctoRelacionado:
 
 
 class Pago:
-    def __init__(
-        self,
-        fecha_pago,
-        forma_pago_p,
-        moneda,
-        monto,
-        docto_relacionado
-    ):
-
-        self._fecha_pago = fecha_pago
-        self._forma_pago_p = forma_pago_p
-        self._moneda = moneda
-        self._monto = monto
-        self._docto_relacionado = docto_relacionado
+    def __init__(self, fecha_pago, forma_pago_p, moneda, monto,
+                 docto_relacionado):
+        self.fecha_pago = fecha_pago
+        self.forma_pago_p = forma_pago_p
+        self.moneda = moneda
+        self.monto = monto
+        self.docto_relacionado = docto_relacionado
 
     @property
     def fecha_pago(self):
@@ -1036,26 +1020,16 @@ class Pago:
 
 
 class TimbreFiscalDigital:
-    def __init__(
-        self,
-        fecha_timbrado,
-        no_certificado_sat,
-        rfc_prov_certif,
-        sello_cfd,
-        sello_sat,
-        uuid,
-        version,
-        cadena_original=None,
-    ):
-
-        self._fecha_timbrado = fecha_timbrado
-        self._no_certificado_sat = no_certificado_sat
-        self._rfc_prov_certif = rfc_prov_certif
-        self._sello_cfd = sello_cfd
-        self._sello_sat = sello_sat
-        self._uuid = uuid
-        self._version = version
-        self._cadena_original = cadena_original
+    def __init__(self, fecha_timbrado, no_certificado_sat, rfc_prov_certif,
+                 sello_cfd, sello_sat, uuid, version, cadena_original=None):
+        self.fecha_timbrado = fecha_timbrado
+        self.no_certificado_sat = no_certificado_sat
+        self.rfc_prov_certif = rfc_prov_certif
+        self.sello_cfd = sello_cfd
+        self.sello_sat = sello_sat
+        self.uuid = uuid
+        self.version = version
+        self.cadena_original = cadena_original
 
     @property
     def fecha_timbrado(self):
@@ -1123,29 +1097,20 @@ class TimbreFiscalDigital:
 
 
 class Linea:
-    def __init__(
-        self,
-        rfc=None,
-        razon_social=None,
-        calle_numero=None,
-        colonia=None,
-        ciudad=None,
-        estado_pais=None,
-        codigo_postal=None,
-        regimen_fiscal=None,
-        color=None,
-        logo=None,
-    ):
-        self._rfc = rfc
-        self._razon_social = razon_social
-        self._calle_numero = calle_numero
-        self._colonia = colonia
-        self._ciudad = ciudad
-        self._estado_pais = estado_pais
-        self._codigo_postal = codigo_postal
-        self._regimen_fiscal = regimen_fiscal
-        self._color = color
-        self._logo = logo
+    def __init__(self, rfc=None, razon_social=None, calle_numero=None,
+                 colonia=None, ciudad=None, estado_pais=None,
+                 codigo_postal=None, regimen_fiscal=None, color=None,
+                 logo=None):
+        self.rfc = rfc
+        self.razon_social = razon_social
+        self.calle_numero = calle_numero
+        self.colonia = colonia
+        self.ciudad = ciudad
+        self.estado_pais = estado_pais
+        self.codigo_postal = codigo_postal
+        self.regimen_fiscal = regimen_fiscal
+        self.color = color
+        self.logo = logo
 
     @property
     def rfc(self):
@@ -1231,8 +1196,8 @@ class Linea:
 class NombreComprobante:
     def __init__(self, nombre_completo):
         self._nombre_completo = nombre_completo
-        self._serie = ''
-        self._folio = 0
+        self.serie = ''
+        self.folio = 0
 
     @property
     def serie(self):
@@ -1258,9 +1223,9 @@ class Certificado:
     Recibe la ruta de un certificado y es representado en forma de base64
     """
     def __init__(self, archivo, numero, ruta='utils|certificados'):
-        self._numero = numero
-        self._archivo = archivo
-        self._ruta = ruta
+        self.numero = numero
+        self.archivo = archivo
+        self.ruta = ruta
 
     @property
     def ruta(self):
