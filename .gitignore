@@ -1,10 +1,12 @@
 diseño/
+__pycache__/
 db.sqlite3
 *.xml
 *.pdf
 *.log
 *.f33
 *.zip
+*.swp
 *~
 Utilidades/
 *__pycache__/
