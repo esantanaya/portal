@@ -10,7 +10,8 @@ from django.core.mail import EmailMessage
 from .forms import ConsultaForm, DatosForm, CorreoForm
 from .legacy_db import (consulta_valides, datos_cliente, get_cab_comp,
                         get_impuestos, get_conceptos, get_fecha_comp)
-from .comprobante import Receptor, Emisor, Comprobante, Impuestos, Concepto
+from .comprobante import (Receptor, Emisor, Comprobante, Impuestos, Concepto,
+                          CFDIError)
 
 
 def corrige_factura(factura):
@@ -132,7 +133,13 @@ def timbre(request):
                                     reg[8], reg[7], 'Tasa')
                 conceptos.append(concepto)
             comprobante.conceptos = conceptos
-            comprobante.timbra_xml()
+            try:
+                comprobante.timbra_xml()
+            except CFDIError as err:
+                if 'CFDI33132' in str(err):
+                    return render(request, 'facturaciononline/error_rfc.html', {})
+                else:
+                    return render(request, 'facturaciononline/error.html', {})
             context = {
                 'titulo': 'Descarga de Información',
                 'agencia': agencia,
@@ -183,11 +190,12 @@ def envio_correo(request):
             agencia = form.cleaned_data['agencia']
             mes_anio = form.cleaned_data['mes_anio']
             ruta_archivo = os.path.join('facturaciononline', 'static',
-                                        'facturas', agencia, mes_anio, archivo)
+                                        'facturas', agencia, mes_anio,
+                                        archivo)
             email = EmailMessage(
                 'Su factura',
                 'Le enviamos su factura',
-                'facturas@prolecsa.mx',
+                'facturas@prolecsa.com.mx',
                 [form.cleaned_data['correo']],
             )
             email.attach_file(f'{ruta_archivo}.pdf')

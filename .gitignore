@@ -1,4 +1,5 @@
 diseño/
+__pycache__/
 db.sqlite3
 *.xml
 *.pdf

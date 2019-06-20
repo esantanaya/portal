@@ -422,6 +422,7 @@ class Comprobante:
             if timbre.status_code != 200:
                 raise CFDIError(f'No se pudo timbrar el CFDI {self.serie}-'
                                 f'{self.folio} '
+                                f'de la agencia: {self.emisor.nombre} '
                                 f'Códgio de error: {timbre.status_code} '
                                 f'Mensaje: {timbre.json()["message"]}')
             else:
