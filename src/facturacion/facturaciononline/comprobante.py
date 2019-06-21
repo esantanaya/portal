@@ -420,11 +420,14 @@ class Comprobante:
             }
             timbre = requests.post(conf.url_timbre, headers=headers, json=data)
             if timbre.status_code != 200:
-                raise CFDIError(f'No se pudo timbrar el CFDI {self.serie}-'
-                                f'{self.folio} '
-                                f'de la agencia: {self.emisor.nombre} '
-                                f'Códgio de error: {timbre.status_code} '
-                                f'Mensaje: {timbre.json()["message"]}')
+                if 'CFDI33132' in timbre.json()['message']:
+                    raise RFCError(f'El RFC {self.receptor.rfc} no es válido')
+                else:
+                    raise CFDIError(f'No se pudo timbrar el CFDI {self.serie}-'
+                                    f'{self.folio} '
+                                    f'de la agencia: {self.emisor.nombre} '
+                                    f'Códgio de error: {timbre.status_code} '
+                                    f'Mensaje: {timbre.json()["message"]}')
             else:
                 cad_xml = timbre.json().get('data').get('cfdi').encode()
                 elemento_xml = et.fromstring(cad_xml)
@@ -1197,8 +1200,8 @@ class Linea:
 class NombreComprobante:
     def __init__(self, nombre_completo):
         self._nombre_completo = nombre_completo
-        self.serie = ''
-        self.folio = 0
+        self._serie = ''
+        self._folio = 0
 
     @property
     def serie(self):
@@ -1312,4 +1315,8 @@ class Configuracion:
 
 
 class CFDIError(Exception):
+    pass
+
+
+class RFCError(Exception):
     pass
