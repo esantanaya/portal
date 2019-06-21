@@ -4,14 +4,15 @@ from io import BytesIO
 from datetime import datetime
 
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import (HttpResponseRedirect, HttpResponse,
+                         HttpResponseServerError)
 from django.core.mail import EmailMessage
 
 from .forms import ConsultaForm, DatosForm, CorreoForm
 from .legacy_db import (consulta_valides, datos_cliente, get_cab_comp,
                         get_impuestos, get_conceptos, get_fecha_comp)
 from .comprobante import (Receptor, Emisor, Comprobante, Impuestos, Concepto,
-                          CFDIError)
+                          RFCError)
 
 
 def corrige_factura(factura):
@@ -135,11 +136,8 @@ def timbre(request):
             comprobante.conceptos = conceptos
             try:
                 comprobante.timbra_xml()
-            except CFDIError as err:
-                if 'CFDI33132' in str(err):
-                    return render(request, 'facturaciononline/error_rfc.html', {})
-                else:
-                    return render(request, 'facturaciononline/error.html', {})
+            except RFCError as err:
+                return render(request, 'facturaciononline/error_rfc.html', {})
             context = {
                 'titulo': 'Descarga de Información',
                 'agencia': agencia,
@@ -221,3 +219,11 @@ def envio_correo(request):
             email.attach_file(f'{ruta_archivo}.xml')
             email.send()
         return HttpResponseRedirect('/facturaciononline/')
+
+def error(request):
+    #HttpResponseServerError es necesario para que el sistema siga
+    #considerando la respuesta un error y mande, por ejemplo, 
+    #los correos de error
+    return HttpResponseServerError(
+        render(request, 'facturaciononline/error.html', {})
+    )

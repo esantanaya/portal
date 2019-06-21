@@ -21,3 +21,5 @@ urlpatterns = [
     path('', include('facturaciononline.urls')),
     path('facturaciononline/', include('facturaciononline.urls')),
 ]
+
+handler500 = 'facturaciononline.views.error'
